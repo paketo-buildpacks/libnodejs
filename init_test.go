@@ -7,9 +7,9 @@ import (
 	"github.com/sclevine/spec/report"
 )
 
-func TestUnitGoBuild(t *testing.T) {
+func TestUnitLibnodejs(t *testing.T) {
 	suite := spec.New("libnodejs", spec.Report(report.Terminal{}), spec.Sequential())
-	suite("ProjectPathParser", testProjectPathParser)
-	suite("PackageJsonParser", testPackageJsonParser)
+	suite("FindProjectPath", testFindProjectPath)
+	suite("PackageJSON", testPackageJSON)
 	suite.Run(t)
 }
