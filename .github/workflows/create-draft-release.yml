@@ -4,6 +4,7 @@ on:
   push:
     branches:
     - main
+    - v*
   repository_dispatch:
     types: [ version-bump ]
   workflow_dispatch:
@@ -18,13 +19,11 @@ jobs:
   unit:
     name: Unit Tests
     runs-on: ubuntu-22.04
-    outputs:
-      builders: ${{ steps.builders.outputs.builders }}
     steps:
     - name: Setup Go
       uses: actions/setup-go@v3
       with:
-        go-version: 1.18.x
+        go-version: 1.19.x
     - name: Checkout
       uses: actions/checkout@v3
     - name: Run Unit Tests
@@ -38,7 +37,7 @@ jobs:
     - name: Setup Go
       uses: actions/setup-go@v3
       with:
-        go-version: 1.18.x
+        go-version: 1.19.x
     - name: Checkout
       uses: actions/checkout@v3
     - run: git fetch --depth=1 origin +refs/tags/*:refs/tags/* || true
@@ -64,14 +63,6 @@ jobs:
           tag="${{ steps.semver.outputs.tag }}"
         fi
         echo "tag=${tag}" >> "$GITHUB_OUTPUT"
-    - name: Package
-      run: ./scripts/package.sh --version "${{ steps.tag.outputs.tag }}"
-    - name: Create Release Notes
-      id: create-release-notes
-      uses: paketo-buildpacks/github-config/actions/release/notes@main
-      with:
-        repo: ${{ github.repository }}
-        token: ${{ secrets.PAKETO_BOT_GITHUB_TOKEN }}
     - name: Create Release
       uses: paketo-buildpacks/github-config/actions/release/create@main
       with:
@@ -80,21 +71,7 @@ jobs:
         tag_name: v${{ steps.tag.outputs.tag }}
         target_commitish: ${{ github.sha }}
         name: v${{ steps.tag.outputs.tag }}
-        body: ${{ steps.create-release-notes.outputs.release_body }}
         draft: true
-        assets: |
-          [
-            {
-              "path": "build/buildpack.tgz",
-              "name": "${{ github.event.repository.name }}-${{ steps.tag.outputs.tag }}.tgz",
-              "content_type": "application/gzip"
-            },
-            {
-              "path": "build/buildpackage.cnb",
-              "name": "${{ github.event.repository.name }}-${{ steps.tag.outputs.tag }}.cnb",
-              "content_type": "application/gzip"
-            }
-          ]
 
   failure:
     name: Alert on Failure
