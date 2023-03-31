@@ -46,11 +46,11 @@ USAGE
 }
 
 function unit::run() {
-  util::print::title "Run Buildpack Unit Tests"
+  util::print::title "Run Library pack Unit and Example Tests"
 
   testout=$(mktemp)
   pushd "${BUILDPACKDIR}" > /dev/null
-    if go test ./... -v -run Unit | tee "${testout}"; then
+    if go test ./... -v | tee "${testout}"; then
       util::tools::tests::checkfocus "${testout}"
       util::print::success "** GO Test Succeeded **"
     else
