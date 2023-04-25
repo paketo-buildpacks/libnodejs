@@ -9,7 +9,8 @@ import (
 
 // FindProjectPath will validate that project path exists and is valid relative to the
 // working directory.
-func FindProjectPath(workingDir, projectPath string) (string, error) {
+func FindProjectPath(workingDir string) (string, error) {
+	projectPath := os.Getenv(ProjectPathEnvName)
 	if projectPath == "" {
 		return workingDir, nil
 	}

@@ -16,14 +16,16 @@ func testPackageJSON(t *testing.T, context spec.G, it spec.S) {
 
 	var (
 		path       string
+		filePath   string
 		workingDir string
 	)
 
 	it.Before(func() {
 		workingDir = t.TempDir()
 
-		path = filepath.Join(workingDir, "package.json")
-		Expect(os.WriteFile(path, []byte(`{
+		path = workingDir
+		filePath = filepath.Join(workingDir, "package.json")
+		Expect(os.WriteFile(filePath, []byte(`{
 			"scripts": {
 				"poststart": "echo \"poststart\"",
 				"prestart": "echo \"prestart\"",
@@ -46,7 +48,7 @@ func testPackageJSON(t *testing.T, context spec.G, it spec.S) {
 	context("failure cases", func() {
 		context("when the package.json is not a valid json file", func() {
 			it.Before(func() {
-				Expect(os.WriteFile(path, []byte(`%%%`), 0600)).To(Succeed())
+				Expect(os.WriteFile(filePath, []byte(`%%%`), 0600)).To(Succeed())
 			})
 
 			it("fails parsing", func() {
@@ -75,7 +77,7 @@ func testPackageJSON(t *testing.T, context spec.G, it spec.S) {
 
 		context("when a start script is NOT present", func() {
 			it.Before(func() {
-				Expect(os.WriteFile(path, []byte(`{}`), 0600)).To(Succeed())
+				Expect(os.WriteFile(filePath, []byte(`{}`), 0600)).To(Succeed())
 			})
 
 			it("indicates that the package.json file does not have a start script", func() {
