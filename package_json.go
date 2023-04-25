@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"os"
+	"path/filepath"
 )
 
 // PackageJSON represents the contents of a package.json file.
@@ -17,7 +18,7 @@ type PackageJSON struct {
 
 // ParsePackageJSON parses the contents of a package.json file.
 func ParsePackageJSON(path string) (PackageJSON, error) {
-	file, err := os.Open(path)
+	file, err := os.Open(filepath.Join(path, "package.json"))
 	if err != nil {
 		return PackageJSON{}, err
 	}
