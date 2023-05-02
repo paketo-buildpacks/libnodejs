@@ -13,10 +13,12 @@ type PackageJSON struct {
 		Node string `json:"node"`
 	} `json:"engines"`
 	Scripts struct {
-		PostStart string `json:"poststart"`
-		PreStart  string `json:"prestart"`
-		Start     string `json:"start"`
-	} `json:"scripts"`
+		PostStart string
+		PreStart  string
+		Start     string
+	}
+
+	AllScripts map[string]string `json:"scripts"`
 }
 
 // ParsePackageJSON parses the contents of a package.json file.
@@ -33,11 +35,24 @@ func ParsePackageJSON(path string) (PackageJSON, error) {
 		return PackageJSON{}, fmt.Errorf("unable to decode package.json %w", err)
 	}
 
+	startScriptName := os.Getenv(StartScriptNameEnvName)
+	if startScriptName == "" {
+		startScriptName = "start"
+	} else {
+		if pkg.AllScripts[startScriptName] == "" {
+			return PackageJSON{}, fmt.Errorf("no script entry with name \"%s\" exists", startScriptName)
+		}
+	}
+
+	pkg.Scripts.Start = pkg.AllScripts[startScriptName]
+	pkg.Scripts.PreStart = pkg.AllScripts["prestart"]
+	pkg.Scripts.PostStart = pkg.AllScripts["poststart"]
+
 	return pkg, nil
 }
 
 // HasStartScript indicates the presence of a start script in the package.json
-// file.
+// file or as defined by .
 func (pj PackageJSON) HasStartScript() bool {
 	return pj.Scripts.Start != ""
 }
