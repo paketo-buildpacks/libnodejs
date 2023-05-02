@@ -88,4 +88,50 @@ func testPackageJSON(t *testing.T, context spec.G, it spec.S) {
 			})
 		})
 	})
+
+	context("ParseVersion", func() {
+		it.Before(func() {
+			Expect(os.WriteFile(filePath, []byte(`{
+				"engines": {
+					"node": "1.2.3"
+				}
+			}`), 0600)).To(Succeed())
+		})
+
+		it("parses the node engine version from a package.json file", func() {
+			pkg, err := libnodejs.ParsePackageJSON(workingDir)
+			Expect(err).NotTo(HaveOccurred())
+			Expect(pkg.GetVersion()).To(Equal("1.2.3"))
+		})
+
+		context("Engines, but no Node version", func() {
+			it.Before(func() {
+				Expect(os.WriteFile(filePath, []byte(`{
+					"engines": {
+					}
+				}`), 0600)).To(Succeed())
+			})
+
+			it("parses the node engine version from a package.json file when no version is specified", func() {
+
+				pkg, err := libnodejs.ParsePackageJSON(workingDir)
+				Expect(err).NotTo(HaveOccurred())
+				Expect(pkg.GetVersion()).To(Equal(""))
+			})
+		})
+
+		context("No Engines", func() {
+			it.Before(func() {
+				Expect(os.WriteFile(filePath, []byte(`{
+				}`), 0600)).To(Succeed())
+			})
+
+			it("parses the node engine version from a package.json file when no version is specified", func() {
+
+				pkg, err := libnodejs.ParsePackageJSON(workingDir)
+				Expect(err).NotTo(HaveOccurred())
+				Expect(pkg.GetVersion()).To(Equal(""))
+			})
+		})
+	})
 }
