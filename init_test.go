@@ -11,5 +11,6 @@ func TestUnitLibnodejs(t *testing.T) {
 	suite := spec.New("libnodejs", spec.Report(report.Terminal{}), spec.Sequential())
 	suite("FindProjectPath", testFindProjectPath)
 	suite("PackageJSON", testPackageJSON)
+	suite("FindNodeApplication", testFindNodeApplication)
 	suite.Run(t)
 }
