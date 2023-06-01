@@ -34,6 +34,10 @@ func testPackageJSON(t *testing.T, context spec.G, it spec.S) {
 		}`), 0600)).To(Succeed())
 	})
 
+	it.After(func() {
+		Expect(os.RemoveAll(workingDir)).To(Succeed())
+	})
+
 	context("when parsing a valid package.json with start scripts", func() {
 		it("successfully extracts the scripts information", func() {
 			pkg, err := libnodejs.ParsePackageJSON(path)
