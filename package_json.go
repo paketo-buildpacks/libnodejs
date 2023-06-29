@@ -9,6 +9,9 @@ import (
 
 // PackageJSON represents the contents of a package.json file.
 type PackageJSON struct {
+	Engines struct {
+		Node string `json:"node"`
+	} `json:"engines"`
 	Scripts struct {
 		PostStart string `json:"poststart"`
 		PreStart  string `json:"prestart"`
@@ -37,4 +40,8 @@ func ParsePackageJSON(path string) (PackageJSON, error) {
 // file.
 func (pj PackageJSON) HasStartScript() bool {
 	return pj.Scripts.Start != ""
+}
+
+func (pj PackageJSON) GetVersion() string {
+	return pj.Engines.Node
 }
