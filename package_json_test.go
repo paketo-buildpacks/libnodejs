@@ -29,7 +29,8 @@ func testPackageJSON(t *testing.T, context spec.G, it spec.S) {
 			"scripts": {
 				"poststart": "echo \"poststart\"",
 				"prestart": "echo \"prestart\"",
-				"start": "echo \"start\" && node server.js"
+				"start": "echo \"start\" && node server.js",
+				"serve": "echo \"about to serve\" && node app.js"
 			}
 		}`), 0600)).To(Succeed())
 	})
@@ -44,6 +45,37 @@ func testPackageJSON(t *testing.T, context spec.G, it spec.S) {
 			Expect(err).NotTo(HaveOccurred())
 
 			Expect(pkg.Scripts.Start).To(ContainSubstring(`echo "start" && node server.js`))
+			Expect(pkg.Scripts.PreStart).To(Equal(`echo "prestart"`))
+			Expect(pkg.Scripts.PostStart).To(Equal(`echo "poststart"`))
+		})
+	})
+
+	context("when parsing a valid package.json poststart and prestart are optional", func() {
+		it.Before(func() {
+			Expect(os.WriteFile(filePath, []byte(`{
+				"scripts": {
+					"start": "echo \"start\" && node server.js"
+				}
+			}`), 0600)).To(Succeed())
+		})
+
+		it("successfully extracts the scripts information", func() {
+			pkg, err := libnodejs.ParsePackageJSON(path)
+			Expect(err).NotTo(HaveOccurred())
+
+			Expect(pkg.Scripts.Start).To(ContainSubstring(`echo "start" && node server.js`))
+			Expect(pkg.Scripts.PreStart).To(Equal(``))
+			Expect(pkg.Scripts.PostStart).To(Equal(``))
+		})
+	})
+
+	context("when parsing a valid package.json with BP_NPM_START_SCRIPT", func() {
+		it("successfully extracts the scripts information", func() {
+			t.Setenv("BP_NPM_START_SCRIPT", "serve")
+			pkg, err := libnodejs.ParsePackageJSON(path)
+			Expect(err).NotTo(HaveOccurred())
+
+			Expect(pkg.Scripts.Start).To(ContainSubstring(`echo "about to serve" && node app.js`))
 			Expect(pkg.Scripts.PreStart).To(Equal(`echo "prestart"`))
 			Expect(pkg.Scripts.PostStart).To(Equal(`echo "poststart"`))
 		})
@@ -67,11 +99,47 @@ func testPackageJSON(t *testing.T, context spec.G, it spec.S) {
 				Expect(err).To(HaveOccurred())
 			})
 		})
+
+		context("when parsing a valid package.json with BP_NPM_START_SCRIPT and script does not exist", func() {
+			it.Before(func() {
+				Expect(os.WriteFile(filePath, []byte(`{
+					"scripts": {
+						"poststart": "echo \"poststart\"",
+						"prestart": "echo \"prestart\"",
+						"start": "echo \"start\" && node server.js"
+					}
+				}`), 0600)).To(Succeed())
+			})
+
+			it("fails to extracts the script information", func() {
+				t.Setenv("BP_NPM_START_SCRIPT", "serve")
+				_, err := libnodejs.ParsePackageJSON(path)
+				Expect(err).To(MatchError(ContainSubstring("no script entry with name \"serve\" exists")))
+			})
+		})
 	})
 
 	context("HasStartScript", func() {
 		context("when a start script is present", func() {
 			it("indicates that the package.json file has a start script", func() {
+				pkg, err := libnodejs.ParsePackageJSON(path)
+				Expect(err).NotTo(HaveOccurred())
+
+				Expect(pkg.HasStartScript()).To(BeTrue())
+			})
+		})
+
+		context("when a start script is present and BP_NPM_START_SCRIPT is used", func() {
+			it.Before(func() {
+				Expect(os.WriteFile(filePath, []byte(`{
+					"scripts": {
+						"serve": "echo \"start\" && node server.js"
+					}
+				}`), 0600)).To(Succeed())
+			})
+
+			it("indicates that the package.json file has a start script", func() {
+				t.Setenv("BP_NPM_START_SCRIPT", "serve")
 				pkg, err := libnodejs.ParsePackageJSON(path)
 				Expect(err).NotTo(HaveOccurred())
 
