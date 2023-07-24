@@ -12,5 +12,6 @@ func TestUnitLibnodejs(t *testing.T) {
 	suite("FindProjectPath", testFindProjectPath)
 	suite("PackageJSON", testPackageJSON)
 	suite("FindNodeApplication", testFindNodeApplication)
+	suite("ResolveNodeVersion", testResolveNodeVersion)
 	suite.Run(t)
 }
