@@ -3,7 +3,7 @@ module github.com/paketo-buildpacks/libnodejs
 go 1.19
 
 require (
-	github.com/onsi/gomega v1.28.1
+	github.com/onsi/gomega v1.29.0
 	github.com/paketo-buildpacks/packit/v2 v2.12.0
 	github.com/sclevine/spec v1.4.0
 )
