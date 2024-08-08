@@ -28,7 +28,8 @@ func FindNodeApplication(workingDir string) (string, error) {
 		return filepath.Clean(launchpoint), nil
 	}
 
-	files := []string{"server.js", "app.js", "main.js", "index.js"}
+	files := []string{"server.js", "server.mjs", "app.js", "app.mjs",
+		"main.js", "main.mjs", "index.js", "index.mjs"}
 	for _, file := range files {
 		_, err := os.Stat(filepath.Join(projectPath, file))
 		if err != nil {
