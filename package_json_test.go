@@ -206,4 +206,34 @@ func testPackageJSON(t *testing.T, context spec.G, it spec.S) {
 			})
 		})
 	})
+
+	context("ParseDependencies", func() {
+		it.Before(func() {
+			Expect(os.WriteFile(filePath, []byte(`{
+				"dependencies": {
+   					 "cpu-features": "0.0.4",
+    				 "express": "^4.18.2"
+  				},
+  			    "devDependencies": {
+			  	    "node-gyp": "^9.3.1"
+  				}
+			}`), 0600)).To(Succeed())
+		})
+
+		it("parses the dependencies from a package.json file", func() {
+			pkg, err := libnodejs.ParsePackageJSON(workingDir)
+			Expect(err).NotTo(HaveOccurred())
+			Expect(pkg.Dependencies).To(HaveLen(2))
+			Expect(pkg.Dependencies).To(HaveKeyWithValue("express", "^4.18.2"))
+		})
+
+		it("parses the devDependencies from a package.json file", func() {
+			pkg, err := libnodejs.ParsePackageJSON(workingDir)
+			Expect(err).NotTo(HaveOccurred())
+			Expect(pkg.DevDependencies).To(HaveLen(1))
+			Expect(pkg.DevDependencies).To(HaveKeyWithValue("node-gyp", "^9.3.1"))
+		})
+
+	})
+
 }

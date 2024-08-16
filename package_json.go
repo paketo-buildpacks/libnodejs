@@ -17,6 +17,8 @@ type PackageJSON struct {
 		PreStart  string
 		Start     string
 	}
+	Dependencies    map[string]string `json:"dependencies"`
+	DevDependencies map[string]string `json:"devDependencies"`
 
 	AllScripts map[string]string `json:"scripts"`
 }
