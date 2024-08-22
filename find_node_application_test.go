@@ -33,6 +33,10 @@ func testFindNodeApplication(t *testing.T, context spec.G, it spec.S) {
 			Expect(os.WriteFile(filepath.Join(workingDir, "app.js"), nil, 0600)).To(Succeed())
 			Expect(os.WriteFile(filepath.Join(workingDir, "main.js"), nil, 0600)).To(Succeed())
 			Expect(os.WriteFile(filepath.Join(workingDir, "index.js"), nil, 0600)).To(Succeed())
+			Expect(os.WriteFile(filepath.Join(workingDir, "server.cjs"), nil, 0600)).To(Succeed())
+			Expect(os.WriteFile(filepath.Join(workingDir, "app.cjs"), nil, 0600)).To(Succeed())
+			Expect(os.WriteFile(filepath.Join(workingDir, "main.cjs"), nil, 0600)).To(Succeed())
+			Expect(os.WriteFile(filepath.Join(workingDir, "index.cjs"), nil, 0600)).To(Succeed())
 			Expect(os.WriteFile(filepath.Join(workingDir, "server.mjs"), nil, 0600)).To(Succeed())
 			Expect(os.WriteFile(filepath.Join(workingDir, "app.mjs"), nil, 0600)).To(Succeed())
 			Expect(os.WriteFile(filepath.Join(workingDir, "main.mjs"), nil, 0600)).To(Succeed())
@@ -46,18 +50,43 @@ func testFindNodeApplication(t *testing.T, context spec.G, it spec.S) {
 		})
 	})
 
-	context("finds the server.mjs application entrypoint", func() {
+	context("finds the server.cjs application entrypoint", func() {
 		it.Before(func() {
 			Expect(os.WriteFile(filepath.Join(workingDir, "app.js"), nil, 0600)).To(Succeed())
 			Expect(os.WriteFile(filepath.Join(workingDir, "main.js"), nil, 0600)).To(Succeed())
 			Expect(os.WriteFile(filepath.Join(workingDir, "index.js"), nil, 0600)).To(Succeed())
+			Expect(os.WriteFile(filepath.Join(workingDir, "server.cjs"), nil, 0600)).To(Succeed())
+			Expect(os.WriteFile(filepath.Join(workingDir, "app.cjs"), nil, 0600)).To(Succeed())
+			Expect(os.WriteFile(filepath.Join(workingDir, "main.cjs"), nil, 0600)).To(Succeed())
+			Expect(os.WriteFile(filepath.Join(workingDir, "index.cjs"), nil, 0600)).To(Succeed())
 			Expect(os.WriteFile(filepath.Join(workingDir, "server.mjs"), nil, 0600)).To(Succeed())
 			Expect(os.WriteFile(filepath.Join(workingDir, "app.mjs"), nil, 0600)).To(Succeed())
 			Expect(os.WriteFile(filepath.Join(workingDir, "main.mjs"), nil, 0600)).To(Succeed())
 			Expect(os.WriteFile(filepath.Join(workingDir, "index.mjs"), nil, 0600)).To(Succeed())
 		})
 
-		it("finds the server.js application entrypoint successfully", func() {
+		it("finds the server.cjs application entrypoint successfully", func() {
+			file, err := libnodejs.FindNodeApplication(workingDir)
+			Expect(err).NotTo(HaveOccurred())
+			Expect(file).To(Equal(filepath.Join("server.cjs")))
+		})
+	})
+
+	context("finds the server.mjs application entrypoint", func() {
+		it.Before(func() {
+			Expect(os.WriteFile(filepath.Join(workingDir, "app.js"), nil, 0600)).To(Succeed())
+			Expect(os.WriteFile(filepath.Join(workingDir, "main.js"), nil, 0600)).To(Succeed())
+			Expect(os.WriteFile(filepath.Join(workingDir, "index.js"), nil, 0600)).To(Succeed())
+			Expect(os.WriteFile(filepath.Join(workingDir, "app.cjs"), nil, 0600)).To(Succeed())
+			Expect(os.WriteFile(filepath.Join(workingDir, "main.cjs"), nil, 0600)).To(Succeed())
+			Expect(os.WriteFile(filepath.Join(workingDir, "index.cjs"), nil, 0600)).To(Succeed())
+			Expect(os.WriteFile(filepath.Join(workingDir, "server.mjs"), nil, 0600)).To(Succeed())
+			Expect(os.WriteFile(filepath.Join(workingDir, "app.mjs"), nil, 0600)).To(Succeed())
+			Expect(os.WriteFile(filepath.Join(workingDir, "main.mjs"), nil, 0600)).To(Succeed())
+			Expect(os.WriteFile(filepath.Join(workingDir, "index.mjs"), nil, 0600)).To(Succeed())
+		})
+
+		it("finds the server.mjs application entrypoint successfully", func() {
 			file, err := libnodejs.FindNodeApplication(workingDir)
 			Expect(err).NotTo(HaveOccurred())
 			Expect(file).To(Equal(filepath.Join("server.mjs")))
@@ -69,6 +98,9 @@ func testFindNodeApplication(t *testing.T, context spec.G, it spec.S) {
 			Expect(os.WriteFile(filepath.Join(workingDir, "app.js"), nil, 0600)).To(Succeed())
 			Expect(os.WriteFile(filepath.Join(workingDir, "main.js"), nil, 0600)).To(Succeed())
 			Expect(os.WriteFile(filepath.Join(workingDir, "index.js"), nil, 0600)).To(Succeed())
+			Expect(os.WriteFile(filepath.Join(workingDir, "app.cjs"), nil, 0600)).To(Succeed())
+			Expect(os.WriteFile(filepath.Join(workingDir, "main.cjs"), nil, 0600)).To(Succeed())
+			Expect(os.WriteFile(filepath.Join(workingDir, "index.cjs"), nil, 0600)).To(Succeed())
 			Expect(os.WriteFile(filepath.Join(workingDir, "app.mjs"), nil, 0600)).To(Succeed())
 			Expect(os.WriteFile(filepath.Join(workingDir, "main.mjs"), nil, 0600)).To(Succeed())
 			Expect(os.WriteFile(filepath.Join(workingDir, "index.mjs"), nil, 0600)).To(Succeed())
@@ -81,16 +113,37 @@ func testFindNodeApplication(t *testing.T, context spec.G, it spec.S) {
 		})
 	})
 
-	context("finds the app.mjs application entrypoint", func() {
+	context("finds the app.cjs application entrypoint", func() {
 		it.Before(func() {
 			Expect(os.WriteFile(filepath.Join(workingDir, "main.js"), nil, 0600)).To(Succeed())
 			Expect(os.WriteFile(filepath.Join(workingDir, "index.js"), nil, 0600)).To(Succeed())
+			Expect(os.WriteFile(filepath.Join(workingDir, "app.cjs"), nil, 0600)).To(Succeed())
+			Expect(os.WriteFile(filepath.Join(workingDir, "main.cjs"), nil, 0600)).To(Succeed())
+			Expect(os.WriteFile(filepath.Join(workingDir, "index.cjs"), nil, 0600)).To(Succeed())
 			Expect(os.WriteFile(filepath.Join(workingDir, "app.mjs"), nil, 0600)).To(Succeed())
 			Expect(os.WriteFile(filepath.Join(workingDir, "main.mjs"), nil, 0600)).To(Succeed())
 			Expect(os.WriteFile(filepath.Join(workingDir, "index.mjs"), nil, 0600)).To(Succeed())
 		})
 
-		it("finds the app.js application entrypoint successfully", func() {
+		it("finds the app.cjs application entrypoint successfully", func() {
+			file, err := libnodejs.FindNodeApplication(workingDir)
+			Expect(err).NotTo(HaveOccurred())
+			Expect(file).To(Equal(filepath.Join("app.cjs")))
+		})
+	})
+
+	context("finds the app.mjs application entrypoint", func() {
+		it.Before(func() {
+			Expect(os.WriteFile(filepath.Join(workingDir, "main.js"), nil, 0600)).To(Succeed())
+			Expect(os.WriteFile(filepath.Join(workingDir, "index.js"), nil, 0600)).To(Succeed())
+			Expect(os.WriteFile(filepath.Join(workingDir, "main.cjs"), nil, 0600)).To(Succeed())
+			Expect(os.WriteFile(filepath.Join(workingDir, "index.cjs"), nil, 0600)).To(Succeed())
+			Expect(os.WriteFile(filepath.Join(workingDir, "app.mjs"), nil, 0600)).To(Succeed())
+			Expect(os.WriteFile(filepath.Join(workingDir, "main.mjs"), nil, 0600)).To(Succeed())
+			Expect(os.WriteFile(filepath.Join(workingDir, "index.mjs"), nil, 0600)).To(Succeed())
+		})
+
+		it("finds the app.mjs application entrypoint successfully", func() {
 			file, err := libnodejs.FindNodeApplication(workingDir)
 			Expect(err).NotTo(HaveOccurred())
 			Expect(file).To(Equal(filepath.Join("app.mjs")))
@@ -101,6 +154,8 @@ func testFindNodeApplication(t *testing.T, context spec.G, it spec.S) {
 		it.Before(func() {
 			Expect(os.WriteFile(filepath.Join(workingDir, "main.js"), nil, 0600)).To(Succeed())
 			Expect(os.WriteFile(filepath.Join(workingDir, "index.js"), nil, 0600)).To(Succeed())
+			Expect(os.WriteFile(filepath.Join(workingDir, "main.cjs"), nil, 0600)).To(Succeed())
+			Expect(os.WriteFile(filepath.Join(workingDir, "index.cjs"), nil, 0600)).To(Succeed())
 			Expect(os.WriteFile(filepath.Join(workingDir, "main.mjs"), nil, 0600)).To(Succeed())
 			Expect(os.WriteFile(filepath.Join(workingDir, "index.mjs"), nil, 0600)).To(Succeed())
 		})
@@ -112,14 +167,31 @@ func testFindNodeApplication(t *testing.T, context spec.G, it spec.S) {
 		})
 	})
 
-	context("finds the main.mjs application entrypoint", func() {
+	context("finds the main.cjs application entrypoint", func() {
 		it.Before(func() {
 			Expect(os.WriteFile(filepath.Join(workingDir, "index.js"), nil, 0600)).To(Succeed())
+			Expect(os.WriteFile(filepath.Join(workingDir, "main.cjs"), nil, 0600)).To(Succeed())
+			Expect(os.WriteFile(filepath.Join(workingDir, "index.cjs"), nil, 0600)).To(Succeed())
 			Expect(os.WriteFile(filepath.Join(workingDir, "main.mjs"), nil, 0600)).To(Succeed())
 			Expect(os.WriteFile(filepath.Join(workingDir, "index.mjs"), nil, 0600)).To(Succeed())
 		})
 
-		it("finds the main.js application entrypoint successfully", func() {
+		it("finds the main.cjs application entrypoint successfully", func() {
+			file, err := libnodejs.FindNodeApplication(workingDir)
+			Expect(err).NotTo(HaveOccurred())
+			Expect(file).To(Equal(filepath.Join("main.cjs")))
+		})
+	})
+
+	context("finds the main.mjs application entrypoint", func() {
+		it.Before(func() {
+			Expect(os.WriteFile(filepath.Join(workingDir, "index.js"), nil, 0600)).To(Succeed())
+			Expect(os.WriteFile(filepath.Join(workingDir, "index.cjs"), nil, 0600)).To(Succeed())
+			Expect(os.WriteFile(filepath.Join(workingDir, "main.mjs"), nil, 0600)).To(Succeed())
+			Expect(os.WriteFile(filepath.Join(workingDir, "index.mjs"), nil, 0600)).To(Succeed())
+		})
+
+		it("finds the main.mjs application entrypoint successfully", func() {
 			file, err := libnodejs.FindNodeApplication(workingDir)
 			Expect(err).NotTo(HaveOccurred())
 			Expect(file).To(Equal(filepath.Join("main.mjs")))
@@ -129,6 +201,7 @@ func testFindNodeApplication(t *testing.T, context spec.G, it spec.S) {
 	context("finds the index.js application entrypoint", func() {
 		it.Before(func() {
 			Expect(os.WriteFile(filepath.Join(workingDir, "index.js"), nil, 0600)).To(Succeed())
+			Expect(os.WriteFile(filepath.Join(workingDir, "index.cjs"), nil, 0600)).To(Succeed())
 			Expect(os.WriteFile(filepath.Join(workingDir, "index.mjs"), nil, 0600)).To(Succeed())
 		})
 
@@ -139,12 +212,25 @@ func testFindNodeApplication(t *testing.T, context spec.G, it spec.S) {
 		})
 	})
 
+	context("finds the index.cjs application entrypoint", func() {
+		it.Before(func() {
+			Expect(os.WriteFile(filepath.Join(workingDir, "index.cjs"), nil, 0600)).To(Succeed())
+			Expect(os.WriteFile(filepath.Join(workingDir, "index.mjs"), nil, 0600)).To(Succeed())
+		})
+
+		it("finds the index.cjs application entrypoint", func() {
+			file, err := libnodejs.FindNodeApplication(workingDir)
+			Expect(err).NotTo(HaveOccurred())
+			Expect(file).To(Equal(filepath.Join("index.cjs")))
+		})
+	})
+
 	context("finds the index.mjs application entrypoint", func() {
 		it.Before(func() {
 			Expect(os.WriteFile(filepath.Join(workingDir, "index.mjs"), nil, 0600)).To(Succeed())
 		})
 
-		it("finds the index.js application entrypoint", func() {
+		it("finds the index.mjs application entrypoint", func() {
 			file, err := libnodejs.FindNodeApplication(workingDir)
 			Expect(err).NotTo(HaveOccurred())
 			Expect(file).To(Equal(filepath.Join("index.mjs")))
@@ -202,7 +288,7 @@ func testFindNodeApplication(t *testing.T, context spec.G, it spec.S) {
 	context("when no application can be found", func() {
 		it("returns that application could not be found", func() {
 			_, err := libnodejs.FindNodeApplication(workingDir)
-			Expect(err).To(MatchError(fmt.Errorf("could not find app in %s: expected one of server.js | server.mjs | app.js | app.mjs | main.js | main.mjs | index.js | index.mjs", workingDir)))
+			Expect(err).To(MatchError(fmt.Errorf("could not find app in %s: expected one of server.js | server.cjs | server.mjs | app.js | app.cjs | app.mjs | main.js | main.cjs | main.mjs | index.js | index.cjs | index.mjs", workingDir)))
 		})
 	})
 
