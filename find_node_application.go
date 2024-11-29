@@ -17,12 +17,16 @@ func FindNodeApplication(workingDir string) (string, error) {
 
 	launchpoint := os.Getenv(LaunchPointEnvName)
 	if launchpoint != "" {
-		if _, err := os.Stat(filepath.Join(workingDir, launchpoint)); err != nil {
-			if errors.Is(err, os.ErrNotExist) {
-				return "", fmt.Errorf("expected value derived from BP_LAUNCHPOINT [%s] to be an existing file", launchpoint)
-			}
+		doVerify := os.Getenv(VerifyLaunchPointEnvName)
 
-			return "", err
+		if doVerify != "false" {
+			if _, err := os.Stat(filepath.Join(workingDir, launchpoint)); err != nil {
+				if errors.Is(err, os.ErrNotExist) {
+					return "", fmt.Errorf("expected value derived from BP_LAUNCHPOINT [%s] to be an existing file", launchpoint)
+				}
+
+				return "", err
+			}
 		}
 
 		return filepath.Clean(launchpoint), nil
