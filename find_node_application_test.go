@@ -259,6 +259,22 @@ func testFindNodeApplication(t *testing.T, context spec.G, it spec.S) {
 				Expect(err).To(MatchError(ContainSubstring("expected value derived from BP_LAUNCHPOINT [./no-such-file.js] to be an existing file")))
 				Expect(file).To(Equal(""))
 			})
+
+			it("returns the empty string and no error if BP_VERIFY_LAUNCHPOINT is true", func() {
+				t.Setenv("BP_LAUNCHPOINT", "./no-such-file.js")
+				t.Setenv("BP_VERIFY_LAUNCHPOINT", "true")
+				file, err := libnodejs.FindNodeApplication(workingDir)
+				Expect(err).To(MatchError(ContainSubstring("expected value derived from BP_LAUNCHPOINT [./no-such-file.js] to be an existing file")))
+				Expect(file).To(Equal(""))
+			})
+
+			it("returns the highest priority file if BP_VERIFY_LAUNCHPOINT is false", func() {
+				t.Setenv("BP_LAUNCHPOINT", "./gen/no-such-file-yet.js")
+				t.Setenv("BP_VERIFY_LAUNCHPOINT", "false")
+				file, err := libnodejs.FindNodeApplication(workingDir)
+				Expect(err).NotTo(HaveOccurred())
+				Expect(file).To(Equal(filepath.Join("gen", "no-such-file-yet.js")))
+			})
 		})
 	})
 
