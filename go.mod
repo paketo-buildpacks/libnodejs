@@ -1,12 +1,12 @@
 module github.com/paketo-buildpacks/libnodejs
 
-go 1.24.5
+go 1.24.6
 
 toolchain go1.24.7
 
 require (
 	github.com/onsi/gomega v1.38.2
-	github.com/paketo-buildpacks/packit/v2 v2.22.0
+	github.com/paketo-buildpacks/packit/v2 v2.24.0
 	github.com/sclevine/spec v1.4.0
 )
 
