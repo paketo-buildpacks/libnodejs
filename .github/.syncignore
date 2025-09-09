@@ -1,4 +1,4 @@
 CODEOWNERS
 workflows/update-dependencies.yml
-dependependabot.yml
+dependabot.yml
 renovate.json
