@@ -5,6 +5,7 @@ on:
     branches:
     - main
     - v*
+    - '!v*-*'
   repository_dispatch:
     types: [ version-bump ]
   workflow_dispatch:
@@ -18,7 +19,7 @@ concurrency: release
 jobs:
   unit:
     name: Unit Tests
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-24.04
     steps:
     - name: Checkout
       uses: actions/checkout@v4
@@ -32,7 +33,7 @@ jobs:
 
   release:
     name: Release
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-24.04
     needs: unit
     steps:
     - name: Checkout
@@ -46,6 +47,7 @@ jobs:
         go-version-file: go.mod
 
     - run: git fetch --depth=1 origin +refs/tags/*:refs/tags/* || true
+
     - name: Reset Draft Release
       id: reset
       uses: paketo-buildpacks/github-config/actions/release/reset-draft@main
@@ -80,7 +82,7 @@ jobs:
 
   failure:
     name: Alert on Failure
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-24.04
     needs: [ unit, release ]
     if: ${{ always() && needs.unit.result == 'failure' || needs.release.result == 'failure' }}
     steps:
