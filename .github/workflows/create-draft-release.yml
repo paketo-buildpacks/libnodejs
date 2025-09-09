@@ -20,12 +20,13 @@ jobs:
     name: Unit Tests
     runs-on: ubuntu-22.04
     steps:
-    - name: Setup Go
-      uses: actions/setup-go@v3
-      with:
-        go-version: 1.20.x
     - name: Checkout
       uses: actions/checkout@v4
+    - name: Setup Go
+      uses: actions/setup-go@v5
+      with:
+        go-version-file: go.mod
+
     - name: Run Unit Tests
       run: ./scripts/unit.sh
 
@@ -34,12 +35,16 @@ jobs:
     runs-on: ubuntu-22.04
     needs: unit
     steps:
-    - name: Setup Go
-      uses: actions/setup-go@v3
-      with:
-        go-version: 1.20.x
     - name: Checkout
       uses: actions/checkout@v4
+      with:
+        fetch-tags: true
+
+    - name: Setup Go
+      uses: actions/setup-go@v5
+      with:
+        go-version-file: go.mod
+
     - run: git fetch --depth=1 origin +refs/tags/*:refs/tags/* || true
     - name: Reset Draft Release
       id: reset

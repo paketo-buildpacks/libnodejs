@@ -1,15 +1,15 @@
 package libnodejs_test
 
 import (
+	_ "embed"
 	"fmt"
 	"os"
 	"path/filepath"
 	"testing"
 
+	. "github.com/onsi/gomega"
 	"github.com/paketo-buildpacks/libnodejs"
 	"github.com/sclevine/spec"
-
-	. "github.com/onsi/gomega"
 )
 
 func testFindNodeApplication(t *testing.T, context spec.G, it spec.S) {
