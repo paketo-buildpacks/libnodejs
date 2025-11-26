@@ -1,6 +1,6 @@
 module github.com/paketo-buildpacks/libnodejs
 
-go 1.25.4
+go 1.24.7
 
 require (
 	github.com/onsi/gomega v1.38.2
