@@ -29,12 +29,15 @@ func ParsePackageJSON(path string) (PackageJSON, error) {
 	if err != nil {
 		return PackageJSON{}, err
 	}
-	defer file.Close()
 
 	var pkg PackageJSON
 	err = json.NewDecoder(file).Decode(&pkg)
 	if err != nil {
 		return PackageJSON{}, fmt.Errorf("unable to decode package.json %w", err)
+	}
+
+	if fileCloseErr := file.Close(); fileCloseErr != nil {
+		return PackageJSON{}, fileCloseErr
 	}
 
 	startScriptName := os.Getenv(StartScriptNameEnvName)
