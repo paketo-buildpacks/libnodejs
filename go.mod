@@ -3,7 +3,7 @@ module github.com/paketo-buildpacks/libnodejs
 go 1.25.6
 
 require (
-	github.com/onsi/gomega v1.39.0
+	github.com/onsi/gomega v1.39.1
 	github.com/paketo-buildpacks/packit/v2 v2.25.4
 	github.com/sclevine/spec v1.4.0
 )
@@ -14,6 +14,6 @@ require (
 	github.com/google/go-cmp v0.7.0 // indirect
 	github.com/pelletier/go-toml v1.9.5 // indirect
 	go.yaml.in/yaml/v3 v3.0.4 // indirect
-	golang.org/x/net v0.48.0 // indirect
-	golang.org/x/text v0.32.0 // indirect
+	golang.org/x/net v0.49.0 // indirect
+	golang.org/x/text v0.33.0 // indirect
 )
