@@ -13,5 +13,6 @@ func TestUnitLibnodejs(t *testing.T) {
 	suite("PackageJSON", testPackageJSON)
 	suite("FindNodeApplication", testFindNodeApplication)
 	suite("ResolveNodeVersion", testResolveNodeVersion)
+	suite("ShouldLaunchWithTini", testShouldLaunchWithTini)
 	suite.Run(t)
 }
